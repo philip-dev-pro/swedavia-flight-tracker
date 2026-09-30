@@ -103,11 +103,21 @@ def main():
         except Exception:
             pass
 
-    # Nu använder vi ALLA städer från city_country.json automatiskt!
+# Skapar ett realistiskt flygschema där stora städer har fler flyg
     if not all_flights:
-        all_available_cities = list(CITIES_MAP.keys()) if CITIES_MAP else ["London", "Paris", "Berlin", "Cairo", "Madrid"]
-        for i in range(len(all_available_cities)):
-            all_flights.append({"destination": all_available_cities[i]})
+        import random
+        # Vikta populära destinationer så de får fler flyg
+        major_hubs = ["London", "Paris", "Berlin", "Amsterdam", "Copenhagen", "Oslo", "Helsinki", "Visby", "Lulea", "Gothenburg", "Stockholm"]
+        all_cities = list(CITIES_MAP.keys()) if CITIES_MAP else major_hubs
+        
+        # Skapa 120 realistiska flygningar
+        for i in range(120):
+            # 60% chans att det är en stor hubb, 40% chans för övriga städer
+            if i % 3 != 0:
+                city = major_hubs[i % len(major_hubs)]
+            else:
+                city = all_cities[i % len(all_cities)]
+            all_flights.append({"destination": city})
 
     # Räkna städer
     dest_counts = Counter()
