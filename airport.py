@@ -10,6 +10,11 @@ try:
     import destinationer
 except ImportError:
     destinationer = None
+try:
+    with open("city_country.json", "r", encoding="utf-8") as f:
+        ALL_CITIES = list(json.load(f).keys())
+except Exception:
+    ALL_CITIES = ["London", "Paris", "Berlin", "Cairo", "Madrid", "New York"]
 
 # ==============================================================================
 # Konfiguration & Flygplatser
@@ -163,7 +168,7 @@ def _print_flights_paged(flights: List[Any]) -> None:
 
 def _generate_mock_flights(airport: str, mode: str) -> List[dict]:
     """Säkerhetsbackup med realistiska flyg ifall API:et har nätverksproblem."""
-    cities = ["London", "Paris", "Berlin", "Amsterdam", "Copenhagen", "Oslo", "Helsinki", "Visby", "Luleå", "Göteborg"]
+    cities = ALL_CITIES
     now = datetime.now()
     flights = []
     for i in range(1, 121):
