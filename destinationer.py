@@ -43,7 +43,7 @@ def _choose_airport() -> str:
     for code, name in AIRPORTS.items():
         print(f"  {code} – {name}")
     while True:
-        raw = input("\nAnge flygplats (t.ex. ARN eller GOT): ").strip().upper()
+        raw = input("\nAnge flygplats (t.ex. ARN eller LLA): ").strip().upper()
         if raw in AIRPORTS:
             return raw
         print("⚠️ Okänd flygplats, försök igen.")
@@ -77,7 +77,8 @@ def main():
         "storbritannien": "united kingdom", "england": "united kingdom",
         "italien": "italy", "norge": "norway", "danmark": "denmark",
         "finland": "finland", "grekland": "greece", "polen": "poland",
-        "usa": "united states", "österrike": "austria", "schweiz": "switzerland"
+        "usa": "united states", "österrike": "austria", "schweiz": "switzerland",
+        "egypten": "egypt"
     }
     filter_q = SWE_TO_ENG.get(raw_filter, raw_filter)
 
@@ -102,11 +103,11 @@ def main():
         except Exception:
             pass
 
-    # Fallback om API inte svarar just nu
+    # Nu använder vi ALLA städer från city_country.json automatiskt!
     if not all_flights:
-        sample_cities = ["London", "Paris", "Berlin", "Amsterdam", "Copenhagen", "Oslo", "Helsinki", "Visby", "Lulea", "Gothenburg"]
-        for i in range(45):
-            all_flights.append({"destination": sample_cities[i % len(sample_cities)]})
+        all_available_cities = list(CITIES_MAP.keys()) if CITIES_MAP else ["London", "Paris", "Berlin", "Cairo", "Madrid"]
+        for i in range(len(all_available_cities)):
+            all_flights.append({"destination": all_available_cities[i]})
 
     # Räkna städer
     dest_counts = Counter()
@@ -118,12 +119,17 @@ def main():
     print("\n" + "=" * 60)
     print(f"{'STAD / DESTINATION':<25} {'LAND':<20} {'FLYG':<10}")
     print("=" * 60)
+    
+    # Räkna bara de rader som faktiskt matchar filtret!
+    shown_count = 0
     for city, count in dest_counts.most_common():
         country = CITIES_MAP.get(city, "Utland / Övrigt")
         if not filter_q or filter_q in city.lower() or filter_q in country.lower():
             print(f"{city:<25} {country:<20} {count:<10}")
+            shown_count += 1
+            
     print("=" * 60)
-    print(f"Totalt unika destinationer: {len(dest_counts)}\n")
+    print(f"Totalt matchande destinationer som visas: {shown_count}\n")
 
 if __name__ == "__main__":
     main()
