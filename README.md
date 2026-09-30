@@ -58,6 +58,9 @@ The application was built across three core files:
 - **Problem 3: Missing Module Entrypoint (`AttributeError`)**  
   *Problem:* Selecting Option 4 threw `AttributeError: module 'destinationer' has no attribute 'main'`.  
   *Solution:* Refactored `destinationer.py` to introduce an explicit `def main():` function so it can run both as an imported helper and as an independent script.
+- **Problem 4: Swedish vs. English Country Name Mismatch**  
+  *Problem:* Entering Swedish country names (such as "Spanien") in the destination filter returned zero results because the database (`city_country.json`) uses English country names ("Spain").  
+  *Solution:* Implemented a translation dictionary (`SWE_TO_ENG`) inside `destinationer.py` that automatically converts Swedish country names into English before querying the data.
 
 ---
 
@@ -82,6 +85,7 @@ The application was built across three core files:
 | **Flashing Terminal Output** | Main loop recycled instantly without pauses | Added `input()` confirmation prompts after output |
 | **Command Not Found (`python3`)** | The VS Code terminal uses a different launcher command | Executed with `py airport.py` instead |
 | **Missing Module Attribute** | `destinationer.py` lacked an entrypoint function | Implemented `def main():` in `destinationer.py` |
+| **Language Filter Mismatch** | User typed Swedish names ("Spanien") while DB is in English | Added `SWE_TO_ENG` translation dictionary in `destinationer.py` |
 | **Git Push Permission Denied** | Terminal lacked an active SSH agent key | Switched remote to HTTPS using Git Credential Manager |
 | **Timezone Ambiguity** | API sends raw UTC format strings | Built `_format_utc_to_cet()` to calculate Swedish CET time |
 
@@ -89,5 +93,3 @@ The application was built across three core files:
 
 ## 📜 Conclusion
 Through this project, I successfully reverse-engineered and reconstructed a fully functioning Swedavia flight tracker using visual clues and logic analysis. The final application is robust, easy to navigate, and faithfully reproduces the behavior and output of the original system.
-
----
