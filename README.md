@@ -61,6 +61,12 @@ The application was built across three core files:
 - **Problem 4: Swedish vs. English Country Name Mismatch**  
   *Problem:* Entering Swedish country names (such as "Spanien") in the destination filter returned zero results because the database (`city_country.json`) uses English country names ("Spain").  
   *Solution:* Implemented a translation dictionary (`SWE_TO_ENG`) inside `destinationer.py` that automatically converts Swedish country names into English before querying the data.
+  - **Problem 5: Incomplete City Database in Fallback Generator**  
+  *Problem:* Searching for certain destinations (such as Cairo or Madrid) returned zero results because the backup generator only contained a hardcoded list of 10 sample cities.  
+  *Solution:* Connected the generator directly to the keys of `city_country.json`, making all 60+ global destinations automatically available without editing source code.
+- **Problem 6: Filter Counter Discrepancy in Destination Analytics**  
+  *Problem:* When filtering by a single destination (e.g., "London"), the terminal printed the matched flight, but the summary footer incorrectly displayed `Totalt unika: 10` (counting the entire dataset rather than filtered results).  
+  *Solution:* Implemented a dynamic `shown_count` counter that increments only for matched rows, accurately outputting `Totalt matchande destinationer som visas: 1`.
 
 ---
 
@@ -88,6 +94,8 @@ The application was built across three core files:
 | **Language Filter Mismatch** | User typed Swedish names ("Spanien") while DB is in English | Added `SWE_TO_ENG` translation dictionary in `destinationer.py` |
 | **Git Push Permission Denied** | Terminal lacked an active SSH agent key | Switched remote to HTTPS using Git Credential Manager |
 | **Timezone Ambiguity** | API sends raw UTC format strings | Built `_format_utc_to_cet()` to calculate Swedish CET time |
+| **Incomplete City List** | Hardcoded sample list missed destinations like Cairo | Connected generator directly to `city_country.json` keys |
+| **Filtered Count Mismatch** | Counter showed total database size instead of matches | Replaced `len(dest_counts)` with dynamic `shown_count` |
 
 ---
 
