@@ -68,7 +68,18 @@ def main():
     print("=" * 60)
     airport = _choose_airport()
     date = _choose_date()
-    filter_q = input("\nFilter på stad eller land (tryck Enter för alla): ").strip().lower()
+    
+    # Inmatning med smart översättning från svenska till engelska
+    raw_filter = input("\nFilter på stad eller land (tryck Enter för alla): ").strip().lower()
+    
+    SWE_TO_ENG = {
+        "spanien": "spain", "tyskland": "germany", "frankrike": "france",
+        "storbritannien": "united kingdom", "england": "united kingdom",
+        "italien": "italy", "norge": "norway", "danmark": "denmark",
+        "finland": "finland", "grekland": "greece", "polen": "poland",
+        "usa": "united states", "österrike": "austria", "schweiz": "switzerland"
+    }
+    filter_q = SWE_TO_ENG.get(raw_filter, raw_filter)
 
     while True:
         val = input("Välj [1-3] (1=Avgångar, 2=Ankomster, 3=Båda): ").strip()
