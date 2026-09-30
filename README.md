@@ -20,7 +20,7 @@ I analyzed video recordings and screenshots of a finished reference implementati
 
 ### Tools & Technologies
 - **Language:** Python (using standard libraries: `urllib.request`, `json`, `datetime`, `collections`).
-- **Development Environment:** VS Code and Windows PowerShell.
+- **Development Environment:** VS Code and the VS Code Integrated Terminal.
 - **Version Control:** Git & GitHub.
 - **Data Source:** Swedavia FlightInfo API v2 + Local `city_country.json` database.
 
@@ -52,9 +52,9 @@ The application was built across three core files:
 - **Problem 1: Rapid Loop Re-rendering (Flashing Menu)**  
   *Problem:* After selecting an option, the script printed output and instantly re-rendered the main menu, causing text to scroll off the screen unread.  
   *Solution:* Inserted structured `input("\nTryck [Enter] för att gå tillbaka...")` pauses after each menu execution block.
-- **Problem 2: Windows Python Launcher Command**  
-  *Problem:* Running `python3 airport.py` in Windows PowerShell triggered a system error stating that Python was not found.  
-  *Solution:* Identified that Windows uses the `py` launcher command instead of `python3`, running the application seamlessly with `py airport.py`.
+- **Problem 2: Python Command in the VS Code Terminal**  
+  *Problem:* Running `python3 airport.py` in the VS Code Integrated Terminal triggered a system error stating that Python was not found.  
+  *Solution:* Identified that the Windows environment uses the `py` launcher command instead of `python3`, running the application seamlessly with `py airport.py`.
 - **Problem 3: Missing Module Entrypoint (`AttributeError`)**  
   *Problem:* Selecting Option 4 threw `AttributeError: module 'destinationer' has no attribute 'main'`.  
   *Solution:* Refactored `destinationer.py` to introduce an explicit `def main():` function so it can run both as an imported helper and as an independent script.
@@ -66,11 +66,11 @@ The application was built across three core files:
 ### Testing & Optimization
 - **Functional Testing:** Systematically verified all 6 menu options (Arrivals, Departures, Flight Search, Destination Analytics, API Health Check, and Auto-Demo).
 - **Pagination Stress Test:** Tested high-volume airports (Stockholm Arlanda) to verify that lists exceeding 100+ flights page smoothly in chunks of 50 without index errors.
-- **Local Verification:** Verified that the entire project executes locally inside Windows PowerShell with zero external pip dependencies needed.
+- **Local Verification:** Verified that the entire project executes locally inside the VS Code Integrated Terminal with zero external pip dependencies needed.
 
 ### Finalization Problems & Solutions
 - **Problem: SSH Authentication Failure During Initial Git Push**  
-  *Problem:* Pushing the project from Windows PowerShell via SSH failed with `Permission denied (publickey)`.  
+  *Problem:* Pushing the project from the VS Code terminal via SSH failed with `Permission denied (publickey)`.  
   *Solution:* Updated the remote repository URL to HTTPS using `git remote set-url origin https://...`, allowing seamless authentication via the Windows browser.
 
 ---
@@ -80,9 +80,9 @@ The application was built across three core files:
 | Identified Problem | Root Cause | Implemented Solution |
 | :--- | :--- | :--- |
 | **Flashing Terminal Output** | Main loop recycled instantly without pauses | Added `input()` confirmation prompts after output |
-| **Command Not Found (`python3`)** | Windows PowerShell uses a different launcher command | Executed with `py airport.py` instead |
+| **Command Not Found (`python3`)** | The VS Code terminal uses a different launcher command | Executed with `py airport.py` instead |
 | **Missing Module Attribute** | `destinationer.py` lacked an entrypoint function | Implemented `def main():` in `destinationer.py` |
-| **Git Push Permission Denied** | Windows PowerShell lacked an active SSH agent key | Switched remote to HTTPS using Git Credential Manager |
+| **Git Push Permission Denied** | Terminal lacked an active SSH agent key | Switched remote to HTTPS using Git Credential Manager |
 | **Timezone Ambiguity** | API sends raw UTC format strings | Built `_format_utc_to_cet()` to calculate Swedish CET time |
 
 ---
